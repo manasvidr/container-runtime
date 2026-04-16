@@ -226,6 +226,7 @@ nice -n 10 ./workloads/cpu_hog
 * Logging is not a full bounded-buffer system
 * CLI arguments are simplified
 * Kernel module uses demonstration logic
+* This implementation focuses on demonstrating core operating system concepts in a simplified and educational manner rather than providing a production-grade container runtime.
 
 ---
 
