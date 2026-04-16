@@ -65,7 +65,67 @@ dmesg | tail
 
 ## 3. Demo Screenshots
 
-(Add your 8 screenshots in /screenshots folder)
+### Screenshot 1 — Multi-Container Supervision
+
+![Multi-container](screenshots/01_multi_container.png)
+
+Two containers (alpha and beta) running simultaneously under a single supervisor process. Each container is created using `clone()` with namespace isolation.
+
+---
+
+### Screenshot 2 — Metadata Tracking
+
+![PS output](screenshots/02_ps_output.png)
+
+Output of the `engine ps` command showing active containers and their corresponding host PIDs managed by the supervisor.
+
+---
+
+### Screenshot 3 — Logging
+
+![Logging](screenshots/03_logging.png)
+
+Container output captured through pipe redirection and written to `container.log`, demonstrating logging from container to host.
+
+---
+
+### Screenshot 4 — CLI and IPC
+
+![CLI IPC](screenshots/04_cli_ipc.png)
+
+CLI commands sent to the supervisor using a UNIX domain socket. The supervisor processes commands such as start, ps, and stop.
+
+---
+
+### Screenshot 5 — Soft Limit (Monitoring)
+
+![Soft limit](screenshots/05_soft_limit.png)
+
+Kernel module generating warning messages in `dmesg`, demonstrating monitoring of running processes.
+
+---
+
+### Screenshot 6 — Hard Limit (Enforcement)
+
+![Hard limit](screenshots/06_hard_limit.png)
+
+Kernel module enforcing control by sending SIGKILL to a selected process, demonstrating kernel-level process management.
+
+---
+
+### Screenshot 7 — Scheduling Experiment
+
+![Scheduling](screenshots/07_scheduling.png)
+
+CPU scheduling experiment using different `nice` values. Lower nice values receive higher CPU priority, resulting in faster execution.
+
+---
+
+### Screenshot 8 — Clean Teardown
+
+![Teardown](screenshots/08_teardown.png)
+
+System state after stopping containers, showing no leftover or zombie processes, confirming clean teardown.
 
 ---
 
@@ -122,8 +182,6 @@ A simple kernel module is used to:
 * print kernel logs (`dmesg`)
 * demonstrate enforcement behavior
 
-The module showcases how kernel-space can observe and control processes.
-
 ---
 
 ### Scheduling Experiment
@@ -137,82 +195,46 @@ Workloads provided:
 Using `nice`:
 
 ```bash
-nice -n -10 ./cpu_hog
-nice -n 10 ./cpu_hog
+nice -n -10 ./workloads/cpu_hog
+nice -n 10 ./workloads/cpu_hog
 ```
-
-Observation:
-
-* Lower nice value → higher CPU priority
-* Higher nice value → slower execution
 
 ---
 
 ## 5. Design Decisions
 
-### Use of clone() over fork()
-
-`clone()` allows direct namespace creation, enabling container-like isolation.
-
----
-
-### Use of chroot()
-
-Provides simple filesystem isolation without complexity of pivot_root.
-
----
-
-### Pipe-based Logging
-
-Chosen for simplicity and reliability in transferring container output.
-
----
-
-### UNIX Domain Sockets
-
-Used for IPC between CLI and supervisor:
-
-* lightweight
-* efficient
-* local communication
-
----
-
-### Kernel Module Simplicity
-
-A minimal kernel module is used to demonstrate:
-
-* process inspection
-* signal sending
-
-This keeps the implementation understandable while still showcasing kernel interaction.
+* `clone()` enables namespace-based isolation
+* `chroot()` provides simple filesystem separation
+* Pipes used for logging simplicity
+* UNIX sockets used for IPC
+* Kernel module kept minimal for demonstration
 
 ---
 
 ## 6. Observations
 
-* Multiple containers can run simultaneously under one supervisor
-* Logging output is captured successfully
-* Scheduler behavior changes with `nice` values
-* Kernel module demonstrates process-level control
+* Multiple containers run concurrently
+* Logging is successfully captured
+* Scheduling priority affects execution time
+* Kernel module demonstrates process control
 
 ---
 
 ## 7. Limitations
 
-* No advanced memory tracking (RSS-based enforcement not implemented)
+* No full RSS-based memory enforcement
 * Logging is not a full bounded-buffer system
 * CLI arguments are simplified
-* Kernel module uses demonstration logic rather than full monitoring
+* Kernel module uses demonstration logic
 
 ---
 
 ## 8. Conclusion
 
-This project demonstrates core operating system concepts:
+This project demonstrates core OS concepts:
 
 * process isolation
 * inter-process communication
-* basic containerization
+* containerization basics
 * scheduling behavior
 * kernel interaction
