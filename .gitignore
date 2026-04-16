@@ -1,0 +1,14 @@
+engine
+*.o
+*.ko
+*.mod
+*.mod.c
+*.symvers
+*.order
+modules.order
+Module.symvers
+rootfs-base/
+rootfs-alpha/
+rootfs-beta/
+*.tar.gz
+.tmp_versions/
