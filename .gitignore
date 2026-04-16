@@ -12,3 +12,5 @@ rootfs-alpha/
 rootfs-beta/
 *.tar.gz
 .tmp_versions/
+workloads/*
+!workloads/*.c
